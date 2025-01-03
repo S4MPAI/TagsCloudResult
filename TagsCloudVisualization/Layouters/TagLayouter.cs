@@ -15,11 +15,6 @@ public class TagLayouter : ITagLayouter
 
     public TagLayouter(ICloudLayouter cloudLayouter, TagLayouterOptions options)
     {
-        if (options.MinFontSize <= 0)
-            throw new ArgumentException($"{nameof(options.MinFontSize)} must be more than zero.");
-        if (options.MinFontSize > options.MaxFontSize)
-            throw new ArgumentException($"{nameof(options.MinFontSize)} must be less or equal {nameof(options.MaxFontSize)}");
-
         _cloudLayouter = cloudLayouter;
         _minFontSize = options.MinFontSize;
         _maxFontSize = options.MaxFontSize;

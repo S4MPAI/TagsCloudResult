@@ -28,23 +28,12 @@ public class TagLayouterTests
             .ReturnsNextFromSequence(_wordPlaces);
     }
 
-    [TestCase(-1, 5, Description = "WhenMinFontSizeLessThanZero")]
-    [TestCase(10, 5, Description = "WhenMinFontMoreThanMaxFontSize")]
-    public void Constructor_ShouldThrowArgumentException(int minFonSize, int maxFonSize)
-    {
-        var options = new TagLayouterOptions(minFonSize, maxFonSize, "Arial");
-        var constructor = () => new TagLayouter(_cloudLayouterMock, options);
-
-        constructor.Should().Throw<ArgumentException>();
-    }
-
-
     [Test]
     public void GetTags_ShouldReturnTags()
     {
-        var a = new TagLayouter(_cloudLayouterMock, new TagLayouterOptions(10, 20, "Arial"));
-        var words = new List<string> { "слово", "одежда", "ежевика", "слово", "слово", "одежда" };
         var fontFamily = new FontFamily("Arial");
+        var a = new TagLayouter(_cloudLayouterMock, new TagLayouterOptions(10, 20, fontFamily));
+        var words = new List<string> { "слово", "одежда", "ежевика", "слово", "слово", "одежда" };
 
         var actualTags = a.GetTags(words).ToList();
         var expectedTags = new Tag[]

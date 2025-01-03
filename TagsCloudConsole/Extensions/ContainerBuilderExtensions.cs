@@ -1,7 +1,5 @@
 using System.Drawing;
-using System.Security.Cryptography;
 using Autofac;
-using Autofac.Core;
 using DeepMorphy;
 using TagsCloudVisualization.ColorFactories;
 using TagsCloudVisualization.ImageSavers;
@@ -17,9 +15,9 @@ namespace TagsCloudConsole.Extensions;
 
 public static class ContainerBuilderExtensions
 {
-    public static ContainerBuilder RegisterWordAnalytics(this ContainerBuilder builder)
+    public static ContainerBuilder RegisterWordAnalytics(this ContainerBuilder builder, TagsCloudVisualizationOptions options)
     {
-        builder.RegisterInstance(WordList.CreateFromFiles("Dictionaries/ru/ru.dic"));
+        builder.RegisterInstance(WordList.CreateFromFiles(options.DictionaryPath));
         builder.RegisterType<MorphAnalyzer>().AsSelf().SingleInstance();
 
         return builder;
@@ -82,7 +80,7 @@ public static class ContainerBuilderExtensions
     {
         builder
             .Register<TagLayouterOptions>((_, _) =>
-                new TagLayouterOptions(options.MinFontSize, options.MaxFontSize, options.FontFamily))
+                new TagLayouterOptions(options.MinFontSize, options.MaxFontSize, new FontFamily(options.FontFamily)))
             .AsSelf();
         builder
             .RegisterType<TagLayouter>()

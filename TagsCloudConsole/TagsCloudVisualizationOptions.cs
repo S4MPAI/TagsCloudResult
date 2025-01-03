@@ -8,31 +8,34 @@ public class TagsCloudVisualizationOptions
 {
     [Option('s', "inputFilePath", Required = true)]
     public string InputFilePath { get; set; }
-    
+
     [Option('l', "outputFilePath", Required = true)]
     public string OutputFilePath { get; set; }
-    
+
+    [Option("dicPath", Required = false, Default = "Dictionaries/ru/ru.dic")]
+    public string DictionaryPath { get; set; }
+
     [Option("fontFamily", Required = true)]
     public string FontFamily { get; set; }
-    
+
     [Option('c', "colorName", Required = false, Default = "Black")]
     public string ColorName { get; set; }
-    
+
     [Option('r', "radius", Required = false, Default = 1)]
     public double LayoutRadius { get; set; }
-    
+
     [Option('a', "angleOffset", Required = false, Default = 0.05)]
     public double LayoutAngleOffset { get; set; }
-    
+
     [Option("fontMinSize", Required = false, Default = 14)]
     public int MinFontSize { get; set; }
-    
+
     [Option("fontMaxSize", Required = false, Default = 28)]
     public int MaxFontSize { get; set; }
-    
+
     [Option("width", Required = false, Default = 2000)]
     public int ImageWidth { get; set; }
-    
+
     [Option("height", Required = false, Default = 2000)]
     public int ImageHeight { get; set; }
 }
