@@ -45,7 +45,7 @@ public class OptionsValidator : IValidator<TagsCloudVisualizationOptions>
                         new FontFamily(o.FontFamily);
                         return true;
                     }
-                    catch (Exception e)
+                    catch
                     {
                         return false;
                     }
@@ -76,13 +76,8 @@ public class OptionsValidator : IValidator<TagsCloudVisualizationOptions>
             o => o.ImageWidth > 0 && o.ImageHeight > 0,
             $"Image width and height must be greater than zero. Current Size: {options.ImageWidth}x{options.ImageHeight}");
 
-    private static Result<T> Validate<T>(
-        T obj,
-        Func<T, bool> predicate,
-        string error)
-    {
-        return predicate(obj)
+    private static Result<T> Validate<T>(T obj, Func<T, bool> predicate, string error) =>
+        predicate(obj)
             ? Result.Ok(obj)
             : Result.Fail<T>(error);
-    }
 }

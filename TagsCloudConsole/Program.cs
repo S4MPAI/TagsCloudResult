@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using TagsCloudConsole.Extensions;
 using TagsCloudConsole.Validators;
 using TagsCloudVisualization.TagsCloudImageCreators;
 
@@ -21,19 +20,13 @@ public static class Program
             return;
         }
 
-        var container = new ContainerBuilder()
-            .RegisterWordAnalytics(options)
-            .RegisterWordHandlers()
-            .RegisterTextReaders()
-            .RegisterImageSavers(options)
-            .RegisterColorFactory(options)
-            .RegisterCloudLayouter(options)
-            .RegisterTagLayouter(options)
-            .RegisterTagVisualizer(options)
-            .RegisterTagsCloudImageCreator()
-            .Build();
+        var container = new TagsCloudContainerBuilder(options).Build();
 
         var creator = container.Resolve<ITagsCloudImageCreator>();
-        creator.CreateImageWithTags(options.InputFilePath);
+        var result = creator.CreateImageWithTags(options.InputFilePath);
+
+        Console.WriteLine(result.IsSuccess
+            ? $"Application successfully create image on path: {options.OutputFilePath}"
+            : $"Application failed with error: {result.Error}");
     }
 }
