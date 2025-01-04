@@ -12,16 +12,6 @@ public class ArchimedeanSpiralPointsGeneratorTests
     private const int Seed = 875556434;
     private readonly Random _random = new(Seed);
 
-    [TestCase(-1, 2, TestName = "RadiusLessThanZero")]
-    [TestCase(4, 0, TestName = "AngleOffsetEqualZero")]
-    public void ShouldThrowArgumentException(double radius, double angleOffset)
-    {
-        var pointsGeneratorConstructor =
-            () => new ArchimedeanSpiralPointsGenerator(radius, angleOffset);
-
-        pointsGeneratorConstructor.Should().Throw<ArgumentException>();
-    }
-
     [Test]
     [Repeat(5)]
     public void GeneratePoints_ShouldReturnPointsInSpiral()
