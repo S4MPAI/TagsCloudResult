@@ -43,8 +43,23 @@ public static class Result
         }
     }
 
-    public static Result<T> Then<T>(this Result<T> result, Func<T, Result<T>> func) =>
-        result.IsSuccess ? func(result.Value) : Fail<T>(result.Error);
+    public static Result<None> OfAction(Action action, string? error = null) =>
+        Of<None>(
+            () =>
+            {
+                action();
+                return null!;
+            },
+            error);
+
+    public static Result<None> Then<TInput>(this Result<TInput> result, Action<TInput> action, string? error = null) =>
+        result.Then(input => OfAction(() => action(input), error));
+
+    public static Result<TOutput> Then<TInput, TOutput>(this Result<TInput> result, Func<TInput, TOutput> func, string? error = null) =>
+        result.Then(input => Of(() => func(input), error));
+
+    public static Result<TOutput> Then<TInput, TOutput>(this Result<TInput> result, Func<TInput, Result<TOutput>> func) =>
+        result.IsSuccess ? func(result.Value) : Fail<TOutput>(result.Error);
 
     public static Result<T> RefineError<T>(this Result<T> result, string error)
         => result.IsSuccess ? result : Fail<T>($"{error}. {result.Error}");

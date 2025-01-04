@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using TagsCloudVisualization.Base;
 using TagsCloudVisualization.ImageSavers;
 using TagsCloudVisualization.Layouters;
 using TagsCloudVisualization.TextReaders;
@@ -16,22 +17,29 @@ public class TagsCloudImageCreator(
 {
     private static readonly Regex GetWordsRegex = new(@"\b[a-zA-Zа-яА-ЯёЁ]+\b", RegexOptions.Compiled);
 
-    public void CreateImageWithTags(string pathToText)
+    public Result<None> CreateImageWithTags(string pathToText)
     {
-        var text = textReaders
-            .First(x => x.IsCanRead(pathToText))
-            .ReadWords(pathToText);
-        var words = DivideOnWords(text);
-
-        foreach (var wordHandler in wordHandlers)
-            words = wordHandler.Handle(words);
-
-        var tags = tagLayouter.GetTags(words);
-        using var bitmap = visualizer.Visualize(tags);
-
-        imageSaver.Save(bitmap);
+        return Result
+            .Of(() => textReaders
+                    .First(x => x.IsCanRead(pathToText))
+                    .ReadWords(pathToText),
+                $"Can't read tags on file with {Path.GetExtension(pathToText)} extension")
+            .Then(DivideOnWords)
+            .Then(ApplyHandlers)
+            .Then(tagLayouter.GetTags)
+            .Then(visualizer.Visualize, "Can't visualize tags on bitmap")
+            .Then(imageSaver.Save, "Can't save image")
+            .RefineError("Image creator can't create tas cloud image");
     }
 
     private static IEnumerable<string> DivideOnWords(string text) =>
         GetWordsRegex.Matches(text).Select(x => x.Value);
+
+    private IEnumerable<string> ApplyHandlers(IEnumerable<string> words)
+    {
+        foreach (var wordHandler in wordHandlers)
+            words = wordHandler.Handle(words);
+
+        return words;
+    }
 }

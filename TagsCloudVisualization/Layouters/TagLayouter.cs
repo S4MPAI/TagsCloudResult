@@ -4,23 +4,13 @@ using TagsCloudVisualization.Options;
 
 namespace TagsCloudVisualization.Layouters;
 
-public class TagLayouter : ITagLayouter
+public class TagLayouter(ICloudLayouter cloudLayouter, TagLayouterOptions options) : ITagLayouter
 {
-    private readonly ICloudLayouter _cloudLayouter;
-    private readonly int _minFontSize;
-    private readonly int _maxFontSize;
-    private readonly FontFamily _fontFamily;
+    private readonly int _minFontSize = options.MinFontSize;
+    private readonly int _maxFontSize = options.MaxFontSize;
+    private readonly FontFamily _fontFamily = options.FontFamily;
     private int FontSizeOffset => _maxFontSize - _minFontSize;
-    private readonly Graphics _graphics;
-
-    public TagLayouter(ICloudLayouter cloudLayouter, TagLayouterOptions options)
-    {
-        _cloudLayouter = cloudLayouter;
-        _minFontSize = options.MinFontSize;
-        _maxFontSize = options.MaxFontSize;
-        _fontFamily = options.FontFamily;
-        _graphics = Graphics.FromHwnd(IntPtr.Zero);
-    }
+    private readonly Graphics _graphics = Graphics.FromHwnd(IntPtr.Zero);
 
     public IEnumerable<Tag> GetTags(IEnumerable<string> words)
     {
@@ -37,7 +27,7 @@ public class TagLayouter : ITagLayouter
                 word,
                 fontSize,
                 _fontFamily,
-                _cloudLayouter.PutNextRectangle(GetWordSize(word, fontSize)));
+                cloudLayouter.PutNextRectangle(GetWordSize(word, fontSize)));
         }
     }
 

@@ -1,6 +1,8 @@
+using TagsCloudVisualization.Base;
+
 namespace TagsCloudVisualization.TagsCloudImageCreators;
 
 public interface ITagsCloudImageCreator
 {
-    void CreateImageWithTags(string pathToText);
+    Result<None> CreateImageWithTags(string pathToText);
 }
