@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using CommandLine;
 using TagsCloudConsole.Validators;
 using TagsCloudVisualization.TagsCloudImageCreators;
 
@@ -8,9 +9,12 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        var options = CommandLine.Parser.Default
-            .ParseArguments<TagsCloudVisualizationOptions>(args)
-            .Value;
+        var optionsResult = Parser.Default
+            .ParseArguments<TagsCloudVisualizationOptions>(args);
+        if (optionsResult.Errors.Any())
+            return;
+
+        var options = optionsResult.Value;
         var validator = new OptionsValidator();
         var validatedParams = validator.Validate(options);
 
@@ -21,7 +25,6 @@ public static class Program
         }
 
         var container = new TagsCloudContainerBuilder(options).Build();
-
         var creator = container.Resolve<ITagsCloudImageCreator>();
         var result = creator.CreateImageWithTags(options.InputFilePath);
 
