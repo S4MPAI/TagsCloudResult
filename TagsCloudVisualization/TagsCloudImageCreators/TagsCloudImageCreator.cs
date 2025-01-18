@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Text.RegularExpressions;
 using TagsCloudVisualization.Base;
 using TagsCloudVisualization.ImageSavers;
@@ -27,8 +28,8 @@ public class TagsCloudImageCreator(
             .Then(DivideOnWords)
             .Then(ApplyHandlers)
             .Then(tagLayouter.GetTags)
-            .Then(visualizer.Visualize, "Can't visualize tags on bitmap")
-            .Then(imageSaver.Save, "Can't save image")
+            .Then(visualizer.Visualize)
+            .Then(SaveImage)
             .RefineError("Image creator can't create tas cloud image");
     }
 
@@ -41,5 +42,13 @@ public class TagsCloudImageCreator(
             words = wordHandler.Handle(words);
 
         return words;
+    }
+
+    private Result<None> SaveImage(Bitmap bitmap)
+    {
+        using (bitmap)
+        {
+            return imageSaver.Save(bitmap);
+        }
     }
 }

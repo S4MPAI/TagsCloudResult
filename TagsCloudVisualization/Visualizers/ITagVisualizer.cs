@@ -1,9 +1,10 @@
 using System.Drawing;
+using TagsCloudVisualization.Base;
 using TagsCloudVisualization.Models;
 
 namespace TagsCloudVisualization.Visualizers;
 
 public interface ITagVisualizer
 {
-    public Bitmap Visualize(IEnumerable<Tag> tags);
+    public Result<Bitmap> Visualize(IEnumerable<Tag> tags);
 }

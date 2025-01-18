@@ -1,4 +1,5 @@
 using System.Drawing;
+using TagsCloudVisualization.Base;
 using TagsCloudVisualization.ColorFactories;
 using TagsCloudVisualization.Models;
 
@@ -6,7 +7,7 @@ namespace TagsCloudVisualization.Visualizers;
 
 public class TagVisualizer(IColorFactory colorFactory, Size imageSize) : ITagVisualizer
 {
-    public Bitmap Visualize(IEnumerable<Tag> tags)
+    public Result<Bitmap> Visualize(IEnumerable<Tag> tags)
     {
         var bitmap = new Bitmap(imageSize.Width, imageSize.Height);
         using var graphics = Graphics.FromImage(bitmap);
