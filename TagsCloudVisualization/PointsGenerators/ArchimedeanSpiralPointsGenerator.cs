@@ -3,10 +3,21 @@ using TagsCloudVisualization.Base;
 
 namespace TagsCloudVisualization.PointsGenerators;
 
-public class ArchimedeanSpiralPointsGenerator(double radius, double angleOffset) : IPointsGenerator
+public class ArchimedeanSpiralPointsGenerator : IPointsGenerator
 {
-    private readonly double _offsetPerRadian = PolarMath.GetOffsetPerRadianForArchimedeanSpiral(radius);
-    private readonly double _radiansAngleOffset = PolarMath.ConvertToRadians(angleOffset);
+    private readonly double _offsetPerRadian;
+    private readonly double _radiansAngleOffset;
+
+    public ArchimedeanSpiralPointsGenerator(double radius, double angleOffset)
+    {
+        if (radius <= 0)
+            throw new ArgumentException($"{nameof(radius)} must be greater than 0");
+        if (angleOffset == 0)
+            throw new ArgumentException($"{nameof(angleOffset)} must not be 0");
+
+        _offsetPerRadian = PolarMath.GetOffsetPerRadianForArchimedeanSpiral(radius);
+        _radiansAngleOffset = PolarMath.ConvertToRadians(angleOffset);
+    }
 
     public IEnumerable<Point> GeneratePoints(Point startPoint)
     {

@@ -4,13 +4,27 @@ using TagsCloudVisualization.Options;
 
 namespace TagsCloudVisualization.Layouters;
 
-public class TagLayouter(ICloudLayouter cloudLayouter, TagLayouterOptions options) : ITagLayouter
+public class TagLayouter : ITagLayouter
 {
-    private readonly int _minFontSize = options.MinFontSize;
-    private readonly int _maxFontSize = options.MaxFontSize;
-    private readonly FontFamily _fontFamily = options.FontFamily;
+    private readonly int _minFontSize;
+    private readonly int _maxFontSize;
+    private readonly FontFamily _fontFamily;
     private int FontSizeOffset => _maxFontSize - _minFontSize;
     private readonly Graphics _graphics = Graphics.FromHwnd(IntPtr.Zero);
+    private readonly ICloudLayouter _cloudLayouter;
+
+    public TagLayouter(ICloudLayouter cloudLayouter, TagLayouterOptions options)
+    {
+        if (options.MinFontSize <= 0)
+            throw new ArgumentException($"{nameof(options.MinFontSize)} must be more than zero.");
+        if (options.MinFontSize > options.MaxFontSize)
+            throw new ArgumentException($"{nameof(options.MinFontSize)} must be less or equal {nameof(options.MaxFontSize)}");
+
+        _cloudLayouter = cloudLayouter;
+        _minFontSize = options.MinFontSize;
+        _maxFontSize = options.MaxFontSize;
+        _fontFamily = options.FontFamily;
+    }
 
     public IEnumerable<Tag> GetTags(IEnumerable<string> words)
     {
@@ -27,7 +41,7 @@ public class TagLayouter(ICloudLayouter cloudLayouter, TagLayouterOptions option
                 word,
                 fontSize,
                 _fontFamily,
-                cloudLayouter.PutNextRectangle(GetWordSize(word, fontSize)));
+                _cloudLayouter.PutNextRectangle(GetWordSize(word, fontSize)));
         }
     }
 
