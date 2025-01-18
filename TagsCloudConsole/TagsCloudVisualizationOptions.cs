@@ -6,10 +6,10 @@ namespace TagsCloudConsole;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class TagsCloudVisualizationOptions
 {
-    [Option('s', "inputFilePath", Required = true)]
+    [Option('i', "inputFilePath", Required = true)]
     public string InputFilePath { get; set; }
 
-    [Option('l', "outputFilePath", Required = true)]
+    [Option('o', "outputFilePath", Required = true)]
     public string OutputFilePath { get; set; }
 
     [Option("dicPath", Required = false, Default = "Dictionaries/ru/ru.dic")]

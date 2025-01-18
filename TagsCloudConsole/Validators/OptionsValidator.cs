@@ -50,7 +50,7 @@ public class OptionsValidator : IValidator<TagsCloudVisualizationOptions>
                         return false;
                     }
                 },
-                "Incorrect font family name")
+                @"Incorrect font family name. Available fonts can be found in: C:\Windows\Fonts")
             .Then(value => Validate(value,
                 v => v.MinFontSize > 0,
                 $"{nameof(value.MinFontSize)} must be more than zero."))
